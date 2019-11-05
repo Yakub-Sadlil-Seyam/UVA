@@ -1,0 +1,101 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define MAX 200010
+#define S 100000
+#define MAX2 1000000
+
+int N,Q;
+int cnt[ MAX ];
+int start[ MAX ];
+int n[ MAX ];
+int sTree[ MAX2 ];
+
+    void buildingTree(int node,int a, int b)
+    {
+        if(a == b)
+        {
+            sTree[node] = cnt[ n[ a ] ];
+            return;
+        }
+        int left = (2*node) +1;
+        int right = left + 1;
+        int mid = (a+b)/2;
+        buildingTree(left,a,mid);
+        buildingTree(right,mid+1,b);
+        if (sTree[left] >= sTree[right])
+        {
+          sTree[node] = sTree[left];
+        }
+        else sTree[node] = sTree[right];
+    }
+
+    int query(int node,int a, int b, int index1,int index2)
+    {
+        int temp;
+        if(b < index1 || a > index2) return -1;
+        if(a >= index1 && b <= index2) return sTree[node];
+        int left = 2*node + 1;
+        int right = left + 1;
+        int mid = (a + b) / 2;
+        int temp1 = query(left, a, mid ,index1 , index2);
+        int temp2 = query(right, mid+1, b, index1, index2);
+        if(temp1 == -1) temp = temp2;
+        if(temp2 == -1) temp = temp1;
+        if(temp1 >= temp2) 
+        temp =  temp1;
+        else temp = temp2;
+         return temp;
+    }
+
+//    printTree(int n)
+//    {
+//        for(int i = 0; i< 3*n;i++)
+//        {
+//            cout<<i<<" --> "<<sTree[i]<<endl;
+//        }
+//    }
+
+int main(){
+ int i,j;
+ while( scanf("%d", &N) == 1 ) {
+  if( N == 0 ) break ;
+  scanf("%d", &Q);
+  memset( cnt, 0, sizeof( cnt ) );
+  memset( start, -1, sizeof( cnt ) ) ;
+  for( i = 0; i < N; i ++ ) {
+   scanf("%d", &n[ i ] ) ;
+   n[ i ] += S;
+   cnt[ n[ i ]  ] ++ ;
+   if( cnt[ n [ i ] ] == 1 )
+   start[ n[ i ] ] = i;
+  }
+  buildingTree( 0, 0, N - 1 );
+  // printTree(N);
+  int a,b;
+  for( i = 0; i < Q; i ++ ) {
+   scanf("%d %d", &a, &b);
+   a -- ;
+   b -- ;
+   if( n[ a ] == n[ b ] ) {
+    printf("%d\n", b - a + 1 );
+    continue;
+   }
+
+   int ans ;
+   int v1 = cnt[ n[ a ] ] - a + start[ n [ a ] ];
+   int v2 = b - start[ n[ b ] ] + 1;
+   if( v1 > v2 ) ans = v1;
+   else ans = v2;
+   int r1 = start[ n[ a ] ] + cnt[ n[ a ] ] ;
+   int r2 = start[ n[ b ] ] - 1;
+   if( r1 <= r2 ) {
+    int var = query( 0, 0, N - 1, r1, r2 );
+    if( var > ans ) ans = var ;
+
+   }
+   printf("%d\n", ans );
+  }
+ }
+ return 0;
+}
