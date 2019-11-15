@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define M 10010
+int visited[M];
+
+    void dfs(int x,vector<int>adjlist[])
+    {
+        visited[x] = 1;
+        for(int i = 0; i < adjlist[x].size(); i++)
+        {
+            int y = adjlist[x][i];
+            if(visited[y] == 0)
+            {
+                dfs(adjlist[x][i],adjlist);
+            }
+        }
+    }
+
+    int main()
+    {
+        int t;
+
+        cin>>t;
+        for(int j = 1; j <= t; j++)
+        {
+            //visited[M] = {};
+            int cnt = 0;
+            int node,edge,l;
+            cin>>node>>edge>>l;
+            vector<int> adjlist[M];
+            for(int w = 0; w < node + 1; w++)
+            {
+                visited[w] = 0;
+                adjlist[w].clear();
+            }
+            for(int i = 0; i < edge; i++)
+            {
+                int x,y;
+                cin>>x>>y;
+                adjlist[x].push_back(y);
+            }
+
+            for(int i = 1; i <= l; ++i)
+            {
+                int x;
+                cin>>x;
+                if(visited[x] == 0)
+                {
+                     dfs(x,adjlist);
+                }
+            }
+            for(int i = 1; i <= node; i++)
+            {
+                if(visited[i] == 1) cnt++;
+            }
+            cout<<cnt<<endl;
+        }
+    }
