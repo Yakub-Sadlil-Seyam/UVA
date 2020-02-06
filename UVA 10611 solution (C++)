@@ -1,0 +1,28 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+    int main()
+    {
+        int N,Q;
+        long long c,l;
+        vector<int> v;
+
+        cin>>N;
+        for(int i = 0; i < N; i++)
+        {
+            cin>>c;
+            v.push_back(c);
+        }
+
+        cin>>Q;
+        while(Q--)
+        {
+            cin>>l;
+            auto lower = lower_bound(v.begin(), v.end(), l);
+            vector<int> ::iterator upper = upper_bound(v.begin(), v.end(), l);
+            if( (lower - v.begin()) == 0) cout<<"X ";
+            else cout<<v[(lower - v.begin())-1]<<" ";
+
+            cout<<((upper == v.end()) ? "X" : to_string(*upper)) <<endl;
+        }
+    }
