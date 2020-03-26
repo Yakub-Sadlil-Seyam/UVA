@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define loop(i,n) for(int i = 0; i < n; i++)
+
+int arr[105] = {};
+
+    int knapsack_1D(int n, int mid, int arr[])
+    {
+        int knp[25009] = {};
+
+        loop(i , n)
+        {
+            for(int j = mid; j > 0 ; j--)
+                if(j >= arr[i])
+                {
+                    knp[j] = max( knp[j], arr[i] + knp[j - arr[i]]);
+                }
+        }
+        return knp[mid];
+    }
+
+    int main()
+    {
+        int t;
+        cin>>t;
+        while(t--)
+        {
+            int i = 0, n,sum = 0;
+            cin>>n;
+            int arr[n];
+            loop(i,n)
+            {
+                int x;
+                cin>>x;
+                arr[i] = x;
+                sum += arr[i];
+            }
+            int ans = knapsack_1D( n, sum/2 , arr);
+            cout<<sum-2*ans<<endl;
+        }
+    }
