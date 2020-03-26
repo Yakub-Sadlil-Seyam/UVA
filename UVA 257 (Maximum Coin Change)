@@ -1,0 +1,112 @@
+// By using 1D array
+
+import java.util.Scanner;
+
+public class UVA_357_alternative {
+
+	public static void main(String[] args) {
+		int[] coins = {1,5,10,25,50};
+		int m = coins.length, r = 30001;
+		int[] dynamic = new int[r];
+		
+		for(int j = 0; j < r; j++)
+		{
+			dynamic[j] = 0;
+		}
+		dynamic[0] = 1;
+		
+		for(int i = 0; i < m; i++)
+		{
+			for(int j = coins[i]; j < r; j++)
+			{
+				dynamic[j] += dynamic[j-coins[i]]; 
+			}
+		}
+		
+		Scanner inp = new Scanner(System.in);
+		while(true)
+		{
+			int x;
+			x = inp.nextInt();
+			if(dynamic[x] == 0)
+			System.out.println("There are 1 ways to produce "+x+" cents change");
+			else
+				System.out.println("There are "+dynamic[x]+" ways to produce "+x+" cents change");
+		}
+	}
+
+}
+
+/********************************** alternative way ****************************/
+// By using 2D array
+
+package UVA;
+
+import java.util.Scanner;
+
+public class uva_357 {
+
+	public static void main(String[] args) {
+		int[] coins = {1,5,10,25,50};
+		int m = coins.length, r = 24;
+		long[][] table = new long[m][r];
+		
+		for(int i = 1; i < m; i++)
+		{
+			for(int j = 1; j < r; j++)
+			{
+				table[i][j] = 0;
+			}
+		}
+		
+		for(int i = 0; i < m; i++)
+		{
+			for(int j = 0; j < r; j++)
+			{
+				table[0][j] = 1;
+				table[i][0] = 1;
+			}
+		}
+		
+		for(int i = 1; i < m; i++)
+		{
+			for(int j = 1; j < r; j++)
+			{
+				if(j < coins[i])
+				{
+					table[i][j] = table[i-1][j];
+				}
+				else
+					table[i][j] = table[i][j-coins[i]]+table[i-1][j];
+			}
+		}
+		
+		/*
+		Scanner inp = new Scanner(System.in);
+		while(true)
+		{
+			int x;
+			x = inp.nextInt();
+			System.out.println("There are "+table[4][x]+" ways to produce "+x+" cents change");
+		}
+		*/
+		
+		for(int j = 0; j < r; j++)
+		{
+			System.out.print(" "+j);
+		}
+		System.out.println();
+		
+		for(int i = 0; i < m; i++)
+		{
+			for(int j = 0; j < r; j++)
+			{
+				if(j <= 9)
+					System.out.print(" "+table[i][j]);
+				else
+					System.out.print("  "+table[i][j]);
+			}
+			System.out.println();
+		}
+	}
+}
